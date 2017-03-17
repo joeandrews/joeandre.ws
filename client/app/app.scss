@@ -1,7 +1,51 @@
-@import "common/common";
+/* @import "common/common"; */
 
-.app {
+body {
   height: 100%;
-  background-color: $lightBgColor;
+	width: 100%;
+	position: absolute;
+	background: #fff;
+  /* background-color: $lightBgColor; */
+	canvas {
+		/* width: 100%; */
+		/* height: 100%; */
+		width: calc(100% - 50px);
+		position: absolute;
+		// transform: translatez(0);
+		top: 0px;
+		left: 0px;
+		border: 25px solid #fff;
+		background: #ff4040;
+	}
+	#world {
+		z-index: 1000;
+	}
+	div {
+		position: absolute;
+		display: none;
+		background: transparent;
+		z-index: 10000;
+		/* display: flex; */
+		/* left: 34px; */
+		font-size: 34px;
+		text-transform: uppercase;
+		font-family: monospace;
+		font-weight: 900;
+		/* top: 101px; */
+		text-align: center !important;
+		// background: #ff4040;
+		color: #ff4040;
+		width: 100%;
+		font-size: 27vw;
+	}
+	#hello {
+		top: 34px;
+	}
+	#name {
+		top: 110px;
+	}
+	#ants {
+		top: 210px;
+	}
 }
 
