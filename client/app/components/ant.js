@@ -6,7 +6,7 @@ function randInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 class Ant {
-	constructor (options) {
+	constructor(options) {
 		// options.anthill is the start position
 
 		this.options = options.options;
@@ -14,14 +14,14 @@ class Ant {
 		this.index = options.index;
 
 		let directions = [
-			[ 0,1 ],//n
-			[ 1,1 ],// ne
-			[ 1,0 ], // e
-			[ 1,-1 ], // se
-			[ 0,-1 ], // s
-			[ -1,-1 ], // sw
-			[ -1,0 ], // w
-			[ -1,1 ], // nw
+			[0, 1], //n
+			[1, 1], // ne
+			[1, 0], // e
+			[1, -1], // se
+			[0, -1], // s
+			[-1, -1], // sw
+			[-1, 0], // w
+			[-1, 1], // nw
 		];
 
 		this.directions = directions;
@@ -33,40 +33,41 @@ class Ant {
 
 		if (options.hillLocation) {
 
-			let x  = randInt(25, this.width-25);
-			let y  = randInt(25, this.height-25);
-			this.position = [x,y] ;
-			// this.position = options.hillLocation
-		}
-		else {
-			this.position = [ 0,0 ];
+			let x = randInt(25, this.width - 25);
+			let y = randInt(25, this.height - 25);
+			// this.position = [x,y] ;
+			this.position = options.hillLocation;
+		} else {
+			this.position = [0, 0];
 		}
 		this.foodMatrix = options.foodMatrix;
 		this.numbers = [];
 		this.numbers = factors_naive(this.width);
-function chain(xs, f) {
-  return [].concat.apply([], xs.map(f));
-}
- 
-// [m..n]
-function range(m, n) {
-  return Array.apply(null, Array(n - m + 1)).map(function (x, i) {
-    return m + i;
-  });
-}
+
+		function chain(xs, f) {
+			return [].concat.apply([], xs.map(f));
+		}
+
+		// [m..n]
+		function range(m, n) {
+			return Array.apply(null, Array(n - m + 1)).map(function(x, i) {
+				return m + i;
+			});
+		}
+
 		function factors_naive(n) {
-			return chain( range(1, n), function (x) {       // monadic chain/bind
-				return n % x ? [] : [x];                      // monadic fail or inject/return
+			return chain(range(1, n), function(x) { // monadic chain/bind
+				return n % x ? [] : [x]; // monadic fail or inject/return
 			});
 		}
 		// if (this.width % 2 === 0) {
 
-			// this.numbers = factors_naive(this.width/4);
-			
+		// this.numbers = factors_naive(this.width/4);
+
 		// }
 		// else {
 
-			// this.numbers = factors_naive(this.width);
+		// this.numbers = factors_naive(this.width);
 		// }
 		// this.move = this.numbers[14] || 20;
 
@@ -74,78 +75,75 @@ function range(m, n) {
 
 	}
 
-	draw (context) {
+	draw(context) {
 		if (this.hasFood) {
 			if (this.foodImage) {
 
 				context.save();
-				context.translate(this.position[0] + 10, this.position[1] + 10 );
+				context.translate(this.position[0] + 10, this.position[1] + 10);
 				this.angle = this.directionInt * 45;
 				context.rotate(-this.angle * Math.PI / 180);
 				this.angleChange = false;
-				context.drawImage(this.foodImage, -10,-10, 20,20);
+				context.drawImage(this.foodImage, -10, -10, 20, 20);
 				context.restore();
-			}
-			else {
+			} else {
 
 				this.foodImage = new Image();
 				this.foodImage.width = 20;
 				this.foodImage.height = 20;
-				this.foodImage.onload =  () => {
-					context.save();
-					context.translate(this.position[0] + 10, this.position[1] + 10 );
-					// this.angle = this.directionInt * 45;
-					// context.rotate(this.angle * Math.PI / 180);
-					context.drawImage(this.foodImage, -10,-10, 20,20);
-					context.restore();
-				}
-				// host and invert this
-				this.foodImage.src = 'https://s3.amazonaws.com/fuuzik/ant.png';
+				this.foodImage.onload = () => {
+						context.save();
+						context.translate(this.position[0] + 10, this.position[1] + 10);
+						// this.angle = this.directionInt * 45;
+						// context.rotate(this.angle * Math.PI / 180);
+						context.drawImage(this.foodImage, -10, -10, 20, 20);
+						context.restore();
+					}
+					// host and invert this
+				this.foodImage.src = 'https://s3.amazonaws.com/fuuzik/ant-red.png';
 
 			}
 
-		}
-		else {
+		} else {
 
 			if (this.image) {
 
 				context.save();
-				context.translate(this.position[0] + 10, this.position[1] + 10 );
+				context.translate(this.position[0] + 10, this.position[1] + 10);
 				this.angle = this.directionInt * 45;
 				context.rotate(-this.angle * Math.PI / 180);
 				this.angleChange = false;
-				context.drawImage(this.image, -10,-10, 20,20);
+				context.drawImage(this.image, -10, -10, 20, 20);
 				context.restore();
-			}
-			else {
+			} else {
 
 				this.image = new Image();
 				this.image.width = 20;
 				this.image.height = 20;
-				this.image.onload =  () => {
-					context.save();
-					context.translate(this.position[0] + 10, this.position[1] + 10 );
-					// this.angle = this.directionInt * 45;
-					// context.rotate(this.angle * Math.PI / 180);
-					context.drawImage(this.image, -10,-10, 20,20);
-					context.restore();
-				}
-				// host and invert this
-				this.image.src = 'https://s3.amazonaws.com/fuuzik/ant.png';
+				this.image.onload = () => {
+						context.save();
+						context.translate(this.position[0] + 10, this.position[1] + 10);
+						// this.angle = this.directionInt * 45;
+						// context.rotate(this.angle * Math.PI / 180);
+						context.drawImage(this.image, -10, -10, 20, 20);
+						context.restore();
+					}
+					// host and invert this
+				this.image.src = 'https://s3.amazonaws.com/fuuzik/ant-grey.png';
 
 			}
 		}
 	}
 
-	getPosition () {
+	getPosition() {
 		return this.position;
 	}
 
-	getDirection () {
+	getDirection() {
 		return this.direction;
 	}
 
-	nextPosition () {
+	nextPosition() {
 		// the grid
 		// ants can move n,s,e,w from current position
 
@@ -153,9 +151,9 @@ function range(m, n) {
 		// [1, 0] east
 		// [0, 1] north
 		// [0, -1] south
-		this.counter++;
-			
-		if (this.counter > rand(1,16)) {
+		this.counter = Math.random();
+
+		if (this.counter > 0.8) {
 
 			this.angleChange = true;
 
@@ -169,7 +167,7 @@ function range(m, n) {
 				right = 0;
 			}
 			let directions = [
-				this.directions[left] ,
+				this.directions[left],
 				this.directions[this.directionInt],
 				this.directions[right],
 				// [ 0,1 ],
@@ -255,27 +253,26 @@ function range(m, n) {
 				let x2 = this.position[0] + this.direction[0];
 				let y2 = this.position[1] + this.direction[1];
 
-				if (x1 <= this.width - 1  && x1 >= 1 && y1 <= this.height - 1 && y1 >= 1) {
+				if (x1 <= this.width - 1 && x1 >= 1 && y1 <= this.height - 1 && y1 >= 1) {
 
 					let pheromone = this.pheromoneMap.matrix[x1] ? this.pheromoneMap.matrix[x1][y1] : 0;
 					pheromone = pheromone;
-					let localFactor = rand(0.1, 0.5);
-					if (pheromone < 0.00001) {
-						pheromone = 0.000000001;
+					let localFactor = Math.random();
+					if (pheromone < 0.00000000000000001) {
+						pheromone = 0.00000000000000000000000000001;
 					}
 
-					// let localProb = pheromone * pheromone;
-					let localProb = Math.pow(localFactor, 0 - this.options.beta) *Math.pow(pheromone,this.options.alpha) ;
+					// let localProb = pheromone;
+					let localProb = Math.pow(localFactor, 0 - this.options.beta) * Math.pow(pheromone, this.options.alpha);
 
-					probability[i] = localProb ;
+					probability[i] = localProb;
 					probSum = probSum + localProb;
 					if (localProb > maxProb) {
 						maxProb = localProb;
 						largest = i;
 					}
 
-				}
-				else {
+				} else {
 					probability[i] = 0;
 				}
 
@@ -296,7 +293,7 @@ function range(m, n) {
 
 			// ne = 1
 			if (this.direction[0] === 1) {
-				if (this.direction[1] === 0)		{
+				if (this.direction[1] === 0) {
 					// e = 2
 					this.directionInt = 2;
 
@@ -317,7 +314,7 @@ function range(m, n) {
 
 			if (this.direction[0] === -1) {
 
-				if (this.direction[1] === 0)		{
+				if (this.direction[1] === 0) {
 					// w = 6
 					this.directionInt = 6;
 
@@ -354,21 +351,20 @@ function range(m, n) {
 
 		// console.log(nextStop)
 		// we only do this if the ant has food
-		if (this.position[0] <= this.width - 1  && this.position[0] >= 1 && this.position[1] <= this.height - 1 && this.position[1] >= 1) {
+		if (this.position[0] <= this.width - 1 && this.position[0] >= 1 && this.position[1] <= this.height - 1 && this.position[1] >= 1) {
 
 			this.position[0] = this.position[0] + this.direction[0];
 			this.position[1] = this.position[1] + this.direction[1];
 
 
-				// this.pheromoneMap.updatePheromone(this.position[0], this.position[1], this.hasFood);
-				if (this.position[0] <= this.width - 1  && this.position[0] >= 1 && this.position[1] <= this.height - 1 && this.position[1] >= 1) {
-				if (this.foodMatrix.foodMatrix[this.position[0]][this.position[1]] > 0 && !this.hasFood ) {
+			// this.pheromoneMap.updatePheromone(this.position[0], this.position[1], this.hasFood);
+			if (this.position[0] <= this.width - 1 && this.position[0] >= 1 && this.position[1] <= this.height - 1 && this.position[1] >= 1) {
+				if (this.foodMatrix.foodMatrix[this.position[0]][this.position[1]] > 0 && !this.hasFood) {
 					this.hasFood = true;
 					this.foodMatrix.foodMatrix[this.position[0]][this.position[1]]--;
 					this.direction[0] = -this.direction[0];
 					this.direction[1] = -this.direction[1];
-				}
-				else if (this.foodMatrix.foodMatrix[this.position[0]][this.position[1]] < 0) {
+				} else if (this.foodMatrix.foodMatrix[this.position[0]][this.position[1]] < 0) {
 					// at home
 					if (this.hasFood) {
 
@@ -381,13 +377,12 @@ function range(m, n) {
 						// this.position[0] = this.position[0] - this.direction[0];
 						// this.position[1] = this.position[1] - this.direction[1];
 						console.log('dropped food');
-						
+
 					}
 
 				}
 
-			}
-			else {
+			} else {
 
 				this.position[0] = this.position[0] - this.direction[0];
 				this.position[1] = this.position[1] - this.direction[1];
@@ -396,8 +391,7 @@ function range(m, n) {
 				this.direction[1] = -this.direction[1];
 			}
 
-		}
-		else {
+		} else {
 			// this.counter  = 0;
 
 			this.direction[0] = -this.direction[0];
@@ -409,7 +403,7 @@ function range(m, n) {
 		}
 
 		if (this.direction[0] === 1) {
-			if (this.direction[1] === 0)		{
+			if (this.direction[1] === 0) {
 				// e = 2
 				this.directionInt = 2;
 
@@ -430,7 +424,7 @@ function range(m, n) {
 
 		if (this.direction[0] === -1) {
 
-			if (this.direction[1] === 0)		{
+			if (this.direction[1] === 0) {
 				// w = 6
 				this.directionInt = 6;
 

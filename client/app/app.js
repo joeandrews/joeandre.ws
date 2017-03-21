@@ -10,25 +10,42 @@ import PheromoneMap from './components/pheromoneMap';
 function rand(min, max) {
 	return Math.random() * (max - min) + min;
 }
+
+function factors_naive(n) {
+	return chain(range(1, n), function(x) { // monadic chain/bind
+		return n % x ? [] : [x]; // monadic fail or inject/return
+	});
+}
+
+function chain(xs, f) {
+	return [].concat.apply([], xs.map(f));
+}
+
+// [m..n]
+function range(m, n) {
+	return Array.apply(null, Array(n - m + 1)).map(function(x, i) {
+		return m + i;
+	});
+}
 var init = () => {
 	'use strict';
 	var canvas = document.getElementById('world');
-	canvas.width = window.innerWidth -50;
-	canvas.height = window.innerHeight * 0.6;
+	canvas.width = (window.innerWidth -50);
+	canvas.height = (window.innerHeight * 0.5);
 
-	var pherCanvas = document.getElementById('pher');
-	pherCanvas.width = window.innerWidth - 50;
-	pherCanvas.height = window.innerHeight * 0.6;
+	// var pherCanvas = document.getElementById('pher');
+	// pherCanvas.width = window.innerWidth - 50;
+	// pherCanvas.height = window.innerHeight * 0.4;
 	if (canvas && canvas.getContext) {
 		let context = canvas.getContext('2d');
 
 		// initialise the world variables
-		let noAnts = 200;
+		let noAnts = Math.floor(canvas.width / 8);
 		let noFoodSpots = 10;
 		let foodSize = 10;
 		let RHO = 0.1;
-		let BETA = 1.5;
-		let ALPHA = 1.9;
+		let BETA = 8.5;
+		let ALPHA = 0.9;
 
 		var PheromoneMapSystem = new PheromoneMap({
 			width: canvas.width,
@@ -38,13 +55,13 @@ var init = () => {
 		let foodMatrix = new FoodSpot({
 			width: canvas.width ,
 			height: 400,
-			hillLocation: [ canvas.width -200,  68],
+			hillLocation: [ canvas.width -200,  canvas.height-108],
 		});
 		var ants = [];
 		var foodSpots = [];
 		for (var i = 0; i < noAnts; i++) {
 			ants.push(new Ant({
-				hillLocation: [ canvas.width -200,  68],
+				hillLocation: [ canvas.width -200,  canvas.height-108],
 				pheromoneMap: PheromoneMapSystem,
 				foodMatrix: foodMatrix,
 				index: i,
@@ -74,6 +91,7 @@ var init = () => {
 		function updatePher(canvas, context) {
 
 			var imageData = context.getImageData(0,0, canvas.width, canvas.height);
+			var pher = Math.random() * 0.001;
 			for (var j = canvas.width; j--;)  {
 				for (var k = canvas.height; k--;)  {
 
@@ -95,16 +113,16 @@ var init = () => {
 						// context.fill();
 						// continue;
 					// }
-					let x = PheromoneMapSystem.matrix[j][k]= PheromoneMapSystem.matrix[j][k] - PheromoneMapSystem.matrix[j][k] * 0.001;
+					let x = PheromoneMapSystem.matrix[j][k]= PheromoneMapSystem.matrix[j][k] - PheromoneMapSystem.matrix[j][k] * pher;
 					let node = (k * canvas.width + j) * 4;
 
-					if (x > 0.001) {
-					imageData.data[node] = 255;
+					if (x > 0.0001) {
+					imageData.data[node] = 68;
 					// imageData.data[node+1] =64;
 					// imageData.data[node+2] = 64;
 
-					imageData.data[node+1] =255;
-					imageData.data[node+2] = 255;
+					imageData.data[node+1] =61;
+					imageData.data[node+2] = 61;
 					imageData.data[node+3] = x*255;
 					}
 					else {
@@ -172,21 +190,22 @@ var init = () => {
 
 				for (let i = 0; i < ants.length; i++) {
 				let nextPosition = ants[i].position;
-
+				let deposit = Math.random();	
 				if (ants[i].hasFood && nextPosition[0] > 1 && nextPosition[0] < canvas.width -1 && nextPosition[1] > 1 && nextPosition[1] < canvas.height -1) {
 				PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]]  + 1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]+1]  + 0.1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]+1]  + .1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]]  + .1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]-1] = PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]-1]  + .1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]-1] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]-1]  + .1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]-1] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]-1]  + .1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]]  + .1;
-				// // PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]+1]  + .1;
+					// PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]+1]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]+1]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]-1] = PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]-1]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]-1] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]-1]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]-1] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]-1]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]]  + deposit;
+				// PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]+1]  + deposit;
 				}
 				else if (nextPosition[0] > 1 && nextPosition[0] < canvas.width -1 && nextPosition[1] > 1 && nextPosition[1] < canvas.height -1) {
 
-				PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]]  + 1;
+					PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]]  + 1;
+
 				// // PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]+1]  + 0.1;
 				// // PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]+1] = PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]+1]  + .1;
 				// // PheromoneMapSystem.matrix[nextPosition[0]+1][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]-1][nextPosition[1]]  + .1;

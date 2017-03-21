@@ -18,7 +18,7 @@ class foodSpot {
 					this.foodMatrix[i][j] = 0;
 				}
 		}
-		for (let i=0; i< 15; i++)	 {
+		for (let i=0; i< 30; i++)	 {
 
 			let x  = rand(25, this.width-25);
 			let y  = rand(25, this.height-25);
