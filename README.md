@@ -4,7 +4,7 @@ This is the repo for http://joeandre.ws. It is a simple ES6 site, using webpack 
 
 ---
 
-####Local Dev
+#### Local Dev
 
 1). `npm install`
 2). `npm start`
