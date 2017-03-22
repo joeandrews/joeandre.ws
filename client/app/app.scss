@@ -32,27 +32,50 @@ body {
 	div {
 		p {
 
-			position: absolute;
 			// display: none;
 			background: transparent;
 			z-index: 10000;
 			display: table;
-			left: 25px;
 			font-size: 45px;
 			font-family: 'VT323', monospace;
 			font-weight: 900;
 			padding: 0px 0px;
-			margin: 0px;
+			margin-left: 25px;
 			/* top: 101px; */
+			margin-top: 50px;
 			text-align: left !important;
 			// background: rgb(68,61,61);
 			color: rgb(68,61,61);
 			width: auto;
-			// font-size: 27vw;
+			font-size: 16.5vw;
+
 		}
+		.icons {
+			display: flex;
+			width: 100%;
+			justify-content: flex-start;
+			top: 25px;
+			align-items: flex-end;
+			left: 0px;
+			padding:  0px 25px;
+			position: absolute;
+			#instagram, #github, #linkedin {
+				margin: 0px;
+				font-size: 14px;
+				position: relative;
+				margin-right: 10px;
+				padding: 0px !important;
+				color: #ff5252;
+				text-decoration: none !important;
+			}
+			a {
+				font-family: 'VT323', monospace;
+				text-decoration: none !important;
+			}
+		}
+
 	}
 	#hello {
-		top: 25px;
 	}
 	#name {
 		top: 85px;

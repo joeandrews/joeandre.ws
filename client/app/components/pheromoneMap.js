@@ -15,34 +15,16 @@ class pheromoneMap {
 		this.matrix = [];
 		this.width = options.width;
 		this.height = options.height;
-		// let nodes = options.width * options.height;
-
-		// inner x
-		//innerY
-		// this.matrix[i] = []
 
 		for (let j = 0; j < this.width + 1; j++) {
 
-			// this.matrix[0][j] = 1/0.25;
-			// this.matrix[1][j] = 1/0.25;
-			// this.matrix[2][j] = 1/0.25;
-			// this.matrix[3][j] = 1/0.25;
-			// this.matrix[4][j] = 1/0.25;
-			// this.matrix[5][j] = 1/0.25;
-			// this.matrix[6][j] = 1/0.25;
-			// this.matrix[7][j] = 1/0.25;
 			this.matrix[j] = [];
 			for (let k = 0; k < this.height + 1; k++) {
 
 				this.matrix[j][k] = 0;
-				// for (let l = 0; l < options.width; l++) {
-
-				// this.matrix[i][j][k][l] = 1 / 0.25;
-				// }
 			}
 
 		}
-		// goal is to do this.matrix[x][y][x][y]
 	}
 
 	updatePheromone (x, y, hasFood) {
@@ -70,7 +52,6 @@ class pheromoneMap {
 			for (let j = 0; j < this.height; j++) {
 
 				this.matrix[i][j] = this.matrix[i][j] - (this.matrix[i][j] * 0.2);
-				// console.log(this.matrix[i][j]);
 			}
 		}
 	}

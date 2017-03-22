@@ -5,6 +5,17 @@ function rand(min, max) {
 function randInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+function shuffle(array) {
+	for (var i = array.length - 1; i > 0; i--) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
+	return array;
+
+}
 class Ant {
 	constructor(options) {
 		// options.anthill is the start position
@@ -41,36 +52,6 @@ class Ant {
 			this.position = [0, 0];
 		}
 		this.foodMatrix = options.foodMatrix;
-		this.numbers = [];
-		this.numbers = factors_naive(this.width);
-
-		function chain(xs, f) {
-			return [].concat.apply([], xs.map(f));
-		}
-
-		// [m..n]
-		function range(m, n) {
-			return Array.apply(null, Array(n - m + 1)).map(function(x, i) {
-				return m + i;
-			});
-		}
-
-		function factors_naive(n) {
-			return chain(range(1, n), function(x) { // monadic chain/bind
-				return n % x ? [] : [x]; // monadic fail or inject/return
-			});
-		}
-		// if (this.width % 2 === 0) {
-
-		// this.numbers = factors_naive(this.width/4);
-
-		// }
-		// else {
-
-		// this.numbers = factors_naive(this.width);
-		// }
-		// this.move = this.numbers[14] || 20;
-
 
 
 	}
@@ -151,9 +132,9 @@ class Ant {
 		// [1, 0] east
 		// [0, 1] north
 		// [0, -1] south
-		this.counter = Math.random();
+		this.counter++;
 
-		if (this.counter > 0.8) {
+		if (this.counter > 1) {
 
 			this.angleChange = true;
 
@@ -170,73 +151,8 @@ class Ant {
 				this.directions[left],
 				this.directions[this.directionInt],
 				this.directions[right],
-				// [ 0,1 ],
-				// [ 1,0 ],
-				// [ 0,-1 ],
-				// [ -1,0 ],
-				// [1,1],
-				// [-1,1],
-				// [-1,-1],
-				// [1, -1]
 			];
 
-			// let oppositeDirection  = [-this.direction[0], -this.direction[1]];
-			// // let oppositeDirection  = [0,0];
-
-			// if (this.position[0] < this.options.width && (oppositeDirection[0] !== 1 || oppositeDirection[1] !== 0)) {
-
-			// directions.push([ 1,0 ]);
-			// }
-
-			// if (this.position[0] < this.options.width && this.position[1] < this.options.height && (oppositeDirection[0] !== 1 || oppositeDirection[1] !== 1)) {
-			// directions.push([ 1,1 ]);
-			// }
-
-			// if (this.position[0] < this.options.width && this.position[1] > 0 && (oppositeDirection[0] !== 1 || oppositeDirection[1] !== -1)) {
-			// directions.push([ 1,-1 ]);
-			// }
-
-			// if (this.position[0] > 0 && (oppositeDirection[0] !== -1 || oppositeDirection[1] !== 0)) {
-
-			// directions.push([ -1, 0 ]);
-			// }
-
-			// if (this.position[0] > 0 && this.position[1] < this.options.height && (oppositeDirection[0] !== -1 || oppositeDirection[1] !== 1)) {
-
-			// directions.push([ -1, 1 ]);
-			// }
-
-			// if (this.position[0] > 0 && this.position[1] > 0 && (oppositeDirection[0] !== -1 || oppositeDirection[1] !== -1)) {
-
-			// directions.push([ -1, -1 ]);
-			// }
-
-			// if (this.position[1] < this.options.height && (oppositeDirection[0] !== 0 || oppositeDirection[1] !== 1)) {
-
-			// directions.push([ 0,1 ]);
-			// }
-
-			// if (this.position[1] > 0 && (oppositeDirection[0] !== 0 || oppositeDirection[1] !== -1)) {
-
-			// directions.push([ 0,-1 ]);
-			// }
-			// directions = directions.map((m)=> {
-			// if (m[0] === - this.direction[0] && m[1] === - this.direction[1]) {
-			// return this.direction;
-			// }
-			// return m;
-
-			// });
-			function shuffle(array) {
-				for (var i = array.length - 1; i > 0; i--) {
-					var j = Math.floor(Math.random() * (i + 1));
-					var temp = array[i];
-					array[i] = array[j];
-					array[j] = temp;
-				}
-				return array;
-
-			}
 			directions = shuffle(directions);
 
 			let probability = [];
@@ -259,7 +175,7 @@ class Ant {
 					pheromone = pheromone;
 					let localFactor = Math.random();
 					if (pheromone < 0.00000000000000001) {
-						pheromone = 0.00000000000000000000000000001;
+						pheromone = 0.000000000000000000001;
 					}
 
 					// let localProb = pheromone;
@@ -279,6 +195,7 @@ class Ant {
 			}
 			let nextThreshold = probSum * Math.random();
 			let nextStop = largest;
+			// pick the next direction
 			for (let j = 1; j < directions.length; j++) {
 
 				nextThreshold = nextThreshold - probability[j];
@@ -346,10 +263,8 @@ class Ant {
 
 				}
 			}
-			// this.directionInt = nextStop;
 		}
 
-		// console.log(nextStop)
 		// we only do this if the ant has food
 		if (this.position[0] <= this.width - 1 && this.position[0] >= 1 && this.position[1] <= this.height - 1 && this.position[1] >= 1) {
 
@@ -357,7 +272,6 @@ class Ant {
 			this.position[1] = this.position[1] + this.direction[1];
 
 
-			// this.pheromoneMap.updatePheromone(this.position[0], this.position[1], this.hasFood);
 			if (this.position[0] <= this.width - 1 && this.position[0] >= 1 && this.position[1] <= this.height - 1 && this.position[1] >= 1) {
 				if (this.foodMatrix.foodMatrix[this.position[0]][this.position[1]] > 0 && !this.hasFood) {
 					this.hasFood = true;
@@ -370,13 +284,11 @@ class Ant {
 
 						this.foodMatrix.foodMatrix[this.position[0]][this.position[1]]--;
 						this.hasFood = false;
-
+						// reverse the direction
 						this.direction[0] = -this.direction[0];
 						this.direction[1] = -this.direction[1];
 
-						// this.position[0] = this.position[0] - this.direction[0];
-						// this.position[1] = this.position[1] - this.direction[1];
-						console.log('dropped food');
+						console.log('Ant dropped food');
 
 					}
 
@@ -392,12 +304,9 @@ class Ant {
 			}
 
 		} else {
-			// this.counter  = 0;
 
 			this.direction[0] = -this.direction[0];
 			this.direction[1] = -this.direction[1];
-			// this.position[0] = this.position[0] - this.direction[0];
-			// this.position[1] = this.position[1] - this.direction[1];
 
 
 		}
@@ -456,7 +365,6 @@ class Ant {
 
 			}
 		}
-		// this.directionInt = nextStop;
 		return this.position;
 
 	}
