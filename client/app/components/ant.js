@@ -132,9 +132,9 @@ class Ant {
 		// [1, 0] east
 		// [0, 1] north
 		// [0, -1] south
-		this.counter++;
+		this.counter = Math.random();
 
-		if (this.counter > 1) {
+		if (this.counter > 0.9) {
 
 			this.angleChange = true;
 
@@ -175,7 +175,7 @@ class Ant {
 					pheromone = pheromone;
 					let localFactor = Math.random();
 					if (pheromone < 0.00000000000000001) {
-						pheromone = 0.000000000000000000001;
+						pheromone = 0.00001;
 					}
 
 					// let localProb = pheromone;

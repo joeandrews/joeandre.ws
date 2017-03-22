@@ -25,17 +25,19 @@ function range(m, n) {
 	});
 }
 var init = () => {
-
 	'use strict';
 	var canvas = document.getElementById('world');
 	canvas.width = (window.innerWidth - 50);
 	canvas.height = (window.innerHeight * 0.5);
 
+	// var pherCanvas = document.getElementById('pher');
+	// pherCanvas.width = window.innerWidth - 50;
+	// pherCanvas.height = window.innerHeight * 0.4;
 	if (canvas && canvas.getContext) {
 		let context = canvas.getContext('2d');
 
 		// initialise the world variables
-		let noAnts = Math.floor(canvas.width / 12);
+		let noAnts = Math.floor(canvas.width / 8);
 		let noFoodSpots = 10;
 		let foodSize = 10;
 		let RHO = 0.1;
@@ -69,6 +71,7 @@ var init = () => {
 					alpha: ALPHA
 				}
 			}));
+			// ants.push(i);
 		}
 
 		var m_canvas = document.createElement('canvas');
@@ -86,7 +89,7 @@ var init = () => {
 		function updatePher(canvas, context) {
 
 			var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-			var pher = Math.random() * 0.01;
+			var pher = Math.random() * 0.001;
 			for (var j = canvas.width; j--;) {
 				for (var k = canvas.height; k--;) {
 
@@ -117,9 +120,7 @@ var init = () => {
 						imageData.data[node + 2] = 61;
 						imageData.data[node + 3] = x * 255;
 					}
-
 					continue;
-
 
 				}
 
@@ -135,10 +136,13 @@ var init = () => {
 		let step = () => {
 
 			context.globalAlpha = 1;
+
 			function render() {
 
 				let c = updatePher(m_canvas, mcontext);
+
 				context.globalAlpha = 1;
+
 				context.putImageData(c, 0, 0);
 				step();
 
@@ -161,6 +165,7 @@ var init = () => {
 					PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]] = PheromoneMapSystem.matrix[nextPosition[0]][nextPosition[1]] + 1;
 
 				}
+			}
 			// context.globalAlpha = 1;
 			// calculate updates to the world
 			// for each ant
@@ -177,8 +182,17 @@ var init = () => {
 			// decide if we add more food
 			// render
 
+			// PheromoneMapSystem.decayAllPher();
+			// if (counter > 50)	 {
+			// counter = 0;
+
+			// updatePher(pherCanvas);
+			// }
 			window.requestAnimationFrame(render);
 			counter++;
+
+			// });
+			// step
 
 		}
 		window.onload = function() {
