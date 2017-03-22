@@ -13,4 +13,4 @@ This is the repo for http://joeandre.ws. It is a simple ES6 site, using webpack 
 ---
 
 
-The ants in the simulation, move in a psuedo random fashion influenced by pheromone trails. The anys leave pheromone trails everywhere they go. If they encouter food, they will turn red and change direction 180 degrees, following the trails back to the ant hill.
+The ants in the simulation, move in a psuedo random fashion influenced by pheromone trails. The ants leave pheromone trails everywhere they go. If they encouter food, they will turn red and change direction 180 degrees following the trails back to the ant hill.
